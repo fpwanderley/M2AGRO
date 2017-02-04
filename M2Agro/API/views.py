@@ -29,7 +29,7 @@ class ProductList(APIView):
     """
     Handles operations for a list of a Product.
 
-    URL: /m2agro/api/product
+    URL: /m2agro/api/products
     """
 
     permission_classes = (permissions.AllowAny,)
@@ -38,10 +38,8 @@ class ProductList(APIView):
     @transaction.atomic
     def get(self, request, format=None):
         """
-        Return a Product list.
+            Returns a Product list.
 
-        Args:
-            self.kwargs:
         Returns:
             Product list.
         """
@@ -52,13 +50,38 @@ class ProductList(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @transaction.atomic
+    def post(self, request):
+        """
+            Creates a new Product.
+
+        Args:
+            request.data:
+                'name': Product.name
+
+        Returns:
+            {
+                'id': Product.id,
+                'name' : Product.name
+            }
+        """
+
+        # Serializes the Product obj to be created.
+        serializer = ProductListSerializer(Product(), data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ProductDetail(APIView):
 
     """
-    Handle operations for a single Product instance.
+        Handles operations for a single Product instance.
 
-    URL: /m2agro/api/product?<id>
+        URL: /m2agro/api/product?<id>
     """
 
     permission_classes = (permissions.AllowAny,)
@@ -71,10 +94,14 @@ class ProductDetail(APIView):
             Returns a Product.
 
         args:
-            request.query_params: Dict with params in the query String.
+            request.query_params:
+                'id': Product.id
 
         Returns:
-            a serialized Product.
+            {
+                'id': Product.id,
+                'name' : Product.name
+            }
         """
 
         id = request.query_params.get('id')
@@ -91,11 +118,17 @@ class ProductDetail(APIView):
             Edits a Product.
 
         args:
-            request.query_params: Dict with params in the query String.
-            request.DATA: Dict with new values for the editing Product.
+            request.query_params:
+                'id': Product.id
+
+            request.data:
+                'name': Product.name
 
         Returns:
-            a serialized edited Product.
+            {
+                'id': Product.id,
+                'name' : Product.name
+            }
         """
 
         id = request.query_params.get('id')
@@ -116,7 +149,8 @@ class ProductDetail(APIView):
             Deletes a Product.
 
         Args:
-            request.query_params: Dict with params in the query String.
+            request.query_params:
+                'id': Product.id
 
         Returns:
             HTTP 204 if Product is deleted successfully.
