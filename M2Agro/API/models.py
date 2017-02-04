@@ -32,6 +32,9 @@ class Harvest(models.Model):
     final_date = models.DateField(verbose_name=u'Data Final da Colheita',
                                   editable=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Service(models.Model):
 
