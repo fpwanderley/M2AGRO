@@ -11,6 +11,15 @@ class Product(models.Model):
                             max_length=100,
                             unique=True)
 
+    average_cost = models.DecimalField(u"Custo Médio do Produto (R$)",
+                                       max_digits=15,
+                                       decimal_places=2,
+                                       null=True,
+                                       blank=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Harvest(models.Model):
 
