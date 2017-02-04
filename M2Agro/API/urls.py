@@ -17,4 +17,7 @@ urlpatterns = [
     # GET, PUT e DELETE de Harvest.
     url(r'harvest/$', views.HarvestDetail.as_view()),
 
+    # List with all Services in DB.
+    url(r'services/$', views.ServiceList.as_view()),
+
 ]
