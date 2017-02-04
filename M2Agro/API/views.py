@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import traceback
+
 from django.db import transaction
 
 from django.shortcuts import get_object_or_404
@@ -9,8 +11,8 @@ from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.response import Response
 
-from models import Product, Harvest
-from serializers import ProductListSerializer, HarvestListSerializer
+from models import Product, Harvest, Service
+from serializers import ProductListSerializer, HarvestListSerializer, ServiceSerializer
 
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
@@ -200,14 +202,14 @@ class HarvestList(APIView):
         Args:
             request.data:
                 'name': Harvest.name
-                'start_date': Harvest.initial_date
+                'initial_date': Harvest.initial_date
                 'final_date': Harvest.final_date
 
         Returns:
             {
                 'id': Harvest.id
                 'name': Harvest.name
-                'start_date': Harvest.initial_date
+                'initial_date': Harvest.initial_date
                 'final_date': Harvest.final_date
             }
         """
@@ -247,7 +249,7 @@ class HarvestDetail(APIView):
             {
                 'id': Harvest.id,
                 'name' : Harvest.name
-                'start_date': Harvest.initial_date
+                'initial_date': Harvest.initial_date
                 'final_date': Harvest.final_date
             }
         """
@@ -271,14 +273,14 @@ class HarvestDetail(APIView):
 
             request.data:
                 'name': Harvest.name
-                'start_date': Harvest.initial_date
+                'initial_date': Harvest.initial_date
                 'final_date': Harvest.final_date
 
         Returns:
             {
                 'id': Harvest.id,
                 'name' : Harvest.name
-                'start_date': Harvest.initial_date
+                'initial_date': Harvest.initial_date
                 'final_date': Harvest.final_date
             }
         """
@@ -312,3 +314,78 @@ class HarvestDetail(APIView):
 
         harvest.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ServiceList(APIView):
+
+    """
+        Handles operations for a list of a Service.
+
+        URL: /m2agro/api/harvests
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (CsrfExemptSessionAuthentication,)
+
+    @transaction.atomic
+    def get(self, request, format=None):
+        """
+            Returns a Service list.
+
+        Returns:
+            Service list.
+        """
+
+        services = Service.objects.all()
+
+        serializer = ServiceSerializer(services, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @transaction.atomic
+    def post(self, request):
+        """
+            Creates a new Service.
+
+        PS: The DateFields 'initial_date' and 'final_date' must
+        obey the following formatting: '<day>/<month>/<year>'
+
+        Args:
+            request.data:
+            {
+                'name': Service.name
+                'harvest': Harvest.id
+                'initial_date': Service.initial_date
+                'final_date': Service.final_date
+                'service_products':
+                [{
+                    'product': Product.id
+                    'quantity': ServiceProduct.quantity
+                    'total_cost': ServiceProduct.total_cost
+                }]
+
+        Returns:
+            {
+                'id': Service.id
+                'name': Service.name
+                'harvest': Harvest.id
+                'initial_date': Service.initial_date
+                'final_date': Service.final_date
+                'service_products':
+                [{
+                    'id': ServiceProduct.id
+                    'product': Product.id
+                    'quantity': ServiceProduct.quantity
+                    'total_cost': ServiceProduct.total_cost
+                }]
+            }
+        """
+
+        # Serializes the Service obj to be created.
+        serializer = ServiceSerializer(Service(), data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
