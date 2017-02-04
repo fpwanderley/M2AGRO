@@ -38,9 +38,11 @@ class Harvest(models.Model):
 
 class Service(models.Model):
 
-    harvest = models.ForeignKey(Harvest, related_name="harvests")
+    harvest = models.ForeignKey(Harvest,
+                                verbose_name='Colheita',
+                                related_name="harvests")
 
-    name = models.CharField(u"Nome do Serviço",
+    name = models.CharField(verbose_name="Nome do Serviço",
                             max_length=100)
 
     initial_date = models.DateField(verbose_name=u'Data Inicial do Serviço',
@@ -49,21 +51,38 @@ class Service(models.Model):
     final_date = models.DateField(verbose_name=u'Data Final do Serviço',
                                   editable=True)
 
+    def __str__(self):
+        return self.name
+
+    @property
+    def total_cost(self):
+        """
+            Returns the sum of total_costs of all related ServiceProduct objs.
+
+        :return: Float
+        """
+
+        return sum([prod.total_cost for prod in self.service_products.all()])
+
 
 class ServiceProduct(models.Model):
 
-    product = models.ForeignKey(Product, related_name="products")
+    product = models.ForeignKey(Product, related_name="service_products")
 
-    service = models.ForeignKey(Service, related_name="services")
+    service = models.ForeignKey(Service, related_name="service_products")
 
-    quantity = models.DecimalField(u"Quantidade do Produto no Serviço",
+    quantity = models.DecimalField(u"Quantidade do Produto no Serviço (Kg)",
                                    max_digits=15,
                                    decimal_places=2,
                                    null=True,
                                    blank=True)
 
-    total_cost = models.DecimalField(u"Custo Total do Produto no Serviço",
+    total_cost = models.DecimalField(u"Custo Total do Produto no Serviço (R$)",
                                      max_digits=15,
                                      decimal_places=2,
                                      null=True,
                                      blank=True)
+
+    def __str__(self):
+        return ('{product} em {service}').format(product=self.product.name,
+                                                 service=self.service.name)
