@@ -8,10 +8,13 @@ urlpatterns = [
     # List with all Products in DB.
     url(r'products/$', views.ProductList.as_view()),
 
-    # GET e PUT de ProductDetail.
+    # GET, PUT e DELETE de Product.
     url(r'product/$', views.ProductDetail.as_view()),
 
     # List with all Harvests in DB.
     url(r'harvests/$', views.HarvestList.as_view()),
+
+    # GET, PUT e DELETE de Harvest.
+    url(r'harvest/$', views.HarvestDetail.as_view()),
 
 ]
