@@ -9,8 +9,8 @@ from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.response import Response
 
-from models import Product
-from serializers import ProductListSerializer
+from models import Product, Harvest
+from serializers import ProductListSerializer, HarvestListSerializer
 
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
@@ -161,3 +161,61 @@ class ProductDetail(APIView):
 
         production_order.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class HarvestList(APIView):
+
+    """
+    Handles operations for a list of a Harvest.
+
+    URL: /m2agro/api/harvests
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (CsrfExemptSessionAuthentication,)
+
+    @transaction.atomic
+    def get(self, request, format=None):
+        """
+            Returns a Harvest list.
+
+        Returns:
+            Harvest list.
+        """
+
+        products = Harvest.objects.all()
+
+        serializer = HarvestListSerializer(products, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @transaction.atomic
+    def post(self, request):
+        """
+            Creates a new Harvest.
+
+        PS: The DateFields 'initial_date' and 'final_date' must
+        obey the following formatting: '<day>/<month>/<year>'
+
+        Args:
+            request.data:
+                'name': Harvest.name
+                'start_date': Harvest.initial_date
+                'final_date': Harvest.final_date
+
+        Returns:
+            {
+                'name': Harvest.name
+                'start_date': Harvest.initial_date
+                'final_date': Harvest.final_date
+            }
+        """
+
+        # Serializes the Harvest obj to be created.
+        serializer = HarvestListSerializer(Harvest(), data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
