@@ -14,7 +14,7 @@ Como instalar e utilizar a API:
     1.1 - O SGBD sendo utilizado nesse projeto é o PostGreSQL. Por isso é necessário instalá-lo antes de tudo:
     1.2 - É necessário também criar um usuário com permissões de login com os seguintes parâmetros:
         login: m2agro
-        password: m2agro
+        password: iwantm2agro
     1.3 - Este projeto possui um comando make para criação do BD, e realização das migrações necessárias. Uma vez na
     pasta \M2Agro\M2Agro:
         >> make initiate_db
@@ -67,3 +67,7 @@ um Service. Apesar de esse modelo não ter sido mencionado na descrição, sua c
 estava descrito no teste. Acredito que faria mais sentido a utilização de matriz ao invés de criar uma tabela no BD para
 isso. Se for imprescindível o uso de BD para realização desse quesito, favor informar.
 
+5 - A interface Admin do Django está toda configurada para os modelos que foram implementados. Acho interessante que, após
+ a criação do BD, seja criado um superuser para ter acesso a essa interface para melhor acompanhamento das modificações no
+ BD mediante a utilização das APIs. Uma vez na pasta \M2Agro\M2Agro:
+    >> python manage.py createsuperuser
