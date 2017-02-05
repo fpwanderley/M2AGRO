@@ -4,7 +4,7 @@ from API.serializers import *
 
 """
     This dict can be used in a HTTP POST request and this API will create
-    a new 'Service' model and its dependicies.
+    a new 'Service' model and its dependencies.
 """
 
 serializer_json = {
