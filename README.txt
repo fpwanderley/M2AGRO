@@ -29,6 +29,23 @@ Como instalar e utilizar a API:
     Framework. Para testá-las, basta buscar por sua URL, método HTTP e formatação do payload. Essas informações estão
     presentes em cada um dos métodos implementados em \M2Agro\API\views.py.
 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+Como executar o script com o Teste de Lógica:
+
+-> Uma vez dentro da pasta \TesteLogica, executar:
+    >> python TesteLogica.py
+
+-> O script rodará e escreverá seu resultado no arquivo 'LogicFile.txt' na mesma pasta do script. Os parâmetros do script
+são os mesmos pedidos no teste, com 100 linhas e 100 colunas. Porém, esses parâmetros podem ser modificados facilmente no
+início do script.
+
+OBS: O script foi implementado pensando na sua performance, de maneira a executar o menor número de loops (TEMPO DE EXECUÇÃO)
+possível durante a montagem da matriz com as linhas e colunas. Porém, foi identificada uma possível melhoria para o script
+em termos de ESPAÇO. Como a estrutura da matriz está sendo guardada em uma variável, ela pode ficar muito grande para números
+ grandes de linhas e colunas. A possível melhoria consistiria em guardar as linhas a medida que são geradas, e manipular o
+ arquivo de maneira a escrever as novas linhas em seu início e fim.
+
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
