@@ -79,8 +79,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'm2agro',
-        'USER': 'locus',
-        'PASSWORD': '',
+        'USER': 'm2agro',
+        'PASSWORD': 'iwantm2agro',
     }
 }
 
