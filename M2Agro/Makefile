@@ -10,6 +10,9 @@ update_db:
 run:
 	python manage.py runserver
 
+shell:
+	python manage.py shell
+
 install_hook:
 	pip install flake8
 	flake8 --install-hook
