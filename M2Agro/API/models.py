@@ -5,6 +5,7 @@ from datetime import datetime
 
 from django.db import models
 
+from exceptions import InvalidMonthORYear
 from utils import is_valid_month, is_valid_year
 
 
@@ -92,7 +93,7 @@ class Product(models.Model):
 
         # Raises an Exception for invalid values for month or year.
         else:
-            pass
+            raise InvalidMonthORYear()
 
 
 class Harvest(models.Model):
@@ -131,7 +132,7 @@ class Service(models.Model):
     @classmethod
     def get_ongoing_services(cls, month, year):
         """
-            Returns all services happening on a given month and year.
+            Returns all Services happening on a given month and year.
 
         :param month: Integer between 1 and 12.
         :param year: Integet between 1990 and 2050.
